@@ -1,0 +1,9 @@
+build-essential
+cmake
+ninja-build
+pkg-config
+gdb
+qt6-base-dev
+qt6-tools-dev
+qt6-tools-dev-tools
+libqt6sql6-sqlite

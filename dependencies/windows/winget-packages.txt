@@ -1,0 +1,4 @@
+Kitware.CMake
+Ninja-build.Ninja
+Git.Git
+Microsoft.VisualStudio.2022.BuildTools

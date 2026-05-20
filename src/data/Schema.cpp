@@ -2,6 +2,7 @@
 
 #include <QSqlError>
 #include <QSqlQuery>
+#include <QStringList>
 
 Schema::Schema(DatabaseManager& databaseManager)
     : m_databaseManager(databaseManager)
@@ -77,6 +78,40 @@ bool Schema::createTables()
         && exec(eventsSql)
         && exec(idxEventMaterialSql)
         && exec(idxEventUuidSql);
+}
+
+bool Schema::resetAllData()
+{
+    QSqlDatabase db = m_databaseManager.database();
+
+    if (!db.transaction()) {
+        m_lastError = db.lastError().text();
+        return false;
+    }
+
+    const QStringList sqlList = {
+        "DELETE FROM inventory_events",
+        "DELETE FROM bom_items",
+        "DELETE FROM materials",
+        "DELETE FROM products",
+        "DELETE FROM sqlite_sequence WHERE name IN ('inventory_events', 'bom_items', 'materials', 'products')"
+    };
+
+    for (const QString& sql : sqlList) {
+        QSqlQuery query(db);
+        if (!query.exec(sql)) {
+            m_lastError = query.lastError().text();
+            db.rollback();
+            return false;
+        }
+    }
+
+    if (!db.commit()) {
+        m_lastError = db.lastError().text();
+        return false;
+    }
+
+    return true;
 }
 
 bool Schema::exec(const QString& sql)

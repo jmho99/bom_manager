@@ -19,7 +19,9 @@ public:
     AppContext();
 
     bool initialize();
+    bool resetAllData();
     QString lastError() const;
+    QString databasePath() const;
 
     ProductService& productService();
     MaterialService& materialService();
@@ -29,6 +31,7 @@ public:
 
 private:
     QString m_lastError;
+    QString m_databasePath;
 
     DatabaseManager m_databaseManager;
     ProductRepository m_productRepository;

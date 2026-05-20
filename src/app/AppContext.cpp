@@ -2,6 +2,9 @@
 
 #include "data/Schema.h"
 
+#include <QDir>
+#include <QStandardPaths>
+
 AppContext::AppContext()
     : m_productRepository(m_databaseManager),
       m_materialRepository(m_databaseManager),
@@ -17,7 +20,21 @@ AppContext::AppContext()
 
 bool AppContext::initialize()
 {
-    if (!m_databaseManager.open("inventory_bom.db")) {
+    const QString dataDir = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+    if (dataDir.isEmpty()) {
+        m_lastError = "앱 데이터 저장 경로를 찾을 수 없습니다.";
+        return false;
+    }
+
+    QDir dir(dataDir);
+    if (!dir.exists() && !dir.mkpath(".")) {
+        m_lastError = "앱 데이터 폴더를 생성하지 못했습니다: " + dataDir;
+        return false;
+    }
+
+    m_databasePath = dir.filePath("inventory_bom.db");
+
+    if (!m_databaseManager.open(m_databasePath)) {
         m_lastError = m_databaseManager.lastError();
         return false;
     }
@@ -30,9 +47,25 @@ bool AppContext::initialize()
     return true;
 }
 
+bool AppContext::resetAllData()
+{
+    Schema schema(m_databaseManager);
+    if (!schema.resetAllData()) {
+        m_lastError = schema.lastError();
+        return false;
+    }
+
+    return true;
+}
+
 QString AppContext::lastError() const
 {
     return m_lastError;
+}
+
+QString AppContext::databasePath() const
+{
+    return m_databasePath;
 }
 
 ProductService& AppContext::productService() { return m_productService; }

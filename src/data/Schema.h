@@ -10,6 +10,7 @@ public:
     explicit Schema(DatabaseManager& databaseManager);
 
     bool createTables();
+    bool resetAllData();
     QString lastError() const;
 
 private:

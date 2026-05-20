@@ -104,3 +104,59 @@ src/
 - 프로젝트/발주번호별 출고 관리
 - 로그 충돌 해결 UI
 - Windows 설치 프로그램 생성
+
+## 8. 로컬 데이터와 Release 주의사항
+
+이 프로그램은 사용자가 입력한 데이터와 입출고 로그를 로컬 SQLite DB에 저장합니다.
+Release 압축 파일에는 테스트용 DB나 JSONL 로그가 포함되면 안 됩니다.
+
+현재 DB는 Qt의 `AppLocalDataLocation` 경로에 생성됩니다. 프로그램 메뉴에서 확인할 수 있습니다.
+
+```text
+데이터 → DB 저장 위치 보기
+```
+
+테스트 데이터를 모두 비우려면 프로그램에서 아래 메뉴를 사용할 수 있습니다.
+
+```text
+데이터 → 로컬 데이터 초기화...
+```
+
+프로젝트 폴더 안에 실수로 생성된 DB/log/export 파일을 지우려면 다음 스크립트를 사용합니다.
+
+Ubuntu:
+
+```bash
+./scripts/clean_runtime_data.sh
+```
+
+Windows PowerShell:
+
+```powershell
+.\scripts\clean_runtime_data.ps1
+```
+
+소스 배포용 ZIP을 만들 때는 다음 스크립트를 사용합니다.
+
+```bash
+./scripts/make_source_release.sh
+```
+
+Windows 실행 배포 폴더를 만들 때는 다음 스크립트를 사용합니다.
+
+```powershell
+.\scripts\package_windows.ps1
+```
+
+Release에는 다음 항목이 포함되지 않아야 합니다.
+
+```text
+inventory_bom.db
+inventory_bom.db-*
+*.sqlite
+*.sqlite3
+*.jsonl
+logs/
+exports/
+build/
+```

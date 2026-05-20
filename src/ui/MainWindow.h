@@ -17,6 +17,11 @@ public:
 
 private slots:
     void refreshAll();
+    void resetLocalData();
+    void showDatabasePath();
+
+private:
+    void setupMenu();
 
 private:
     AppContext& m_context;

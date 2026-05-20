@@ -1,18 +1,28 @@
-# Build
+# Build outputs
 build/
-dist/
-*.egg-info/
+release/
+out/
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+.ninja_deps
+.ninja_log
+build-win-release/
 
-# IDE
+# Runtime data / local inventory data
+inventory_bom.db
+inventory_bom.db-*
+*.sqlite
+*.sqlite3
+logs/
+exports/
+*.jsonl
+
+# IDE / OS
 .vscode/
 .idea/
-
-# OS
+*.user
 .DS_Store
 Thumbs.db
-
-# Local config / secret
-.env
-*.log
-
-
